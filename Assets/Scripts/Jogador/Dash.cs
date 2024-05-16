@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class Dash : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Rigidbody2D Rigidbody;
+
 
     // Update is called once per frame
     void Update()
