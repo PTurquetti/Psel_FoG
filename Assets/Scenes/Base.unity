@@ -2342,6 +2342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Velocidade: 10
+  MultiplicadorVelocidade: 1.75
   PeDoPersonagem: {fileID: 1448686843}
   Chao:
     serializedVersion: 2
