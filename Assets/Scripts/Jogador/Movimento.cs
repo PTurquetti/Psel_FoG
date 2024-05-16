@@ -8,6 +8,7 @@ using UnityEngine;
 public class Movimento : MonoBehaviour
 {
     [SerializeField] private float Velocidade;
+    [SerializeField] private float MultiplicadorVelocidade;
     [SerializeField] private Transform PeDoPersonagem;
     [SerializeField] private LayerMask Chao;
     
@@ -25,6 +26,12 @@ public class Movimento : MonoBehaviour
         //Retorna -1 se a seta da esquerda ou A foram pressionados
         //Retorna 0 se nenhum direcional foi pressionado
         float movimento_horizontal = Velocidade * Input.GetAxisRaw("Horizontal");
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            movimento_horizontal *= MultiplicadorVelocidade;
+
+        }
 
         //Neste caso, não se usa Time.deltaTime, porque RigidBody2D.velocity já opera baseado na taxa de frames
         Corpo.velocity = new Vector2(movimento_horizontal, Corpo.velocity.y);
