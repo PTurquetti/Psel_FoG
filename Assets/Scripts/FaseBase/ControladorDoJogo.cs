@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ControladorDoJogo : MonoBehaviour
 {
@@ -12,5 +13,11 @@ public class ControladorDoJogo : MonoBehaviour
         //Para o tempo e ativa o Canvas
         //Time.timeScale = 0.0f;
         CanvasMorreu.gameObject.SetActive(true);
+    }
+
+    public void ProximaFase()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
     }
 }

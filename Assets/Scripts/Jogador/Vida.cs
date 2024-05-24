@@ -31,8 +31,16 @@ public class GerenciadorVida : MonoBehaviour
             //Se sim, avisa o controlador do jogo que ele morreu
             VidaAtual -= 1;
         }
+        else if (collision.collider.tag == "Finish")
+        {
 
-        
+            GameObject.FindGameObjectWithTag("Controlador").GetComponent<ControladorDoJogo>().ProximaFase();
+
+        }
+
+
+
+
     }
 
     public void Morreu()
