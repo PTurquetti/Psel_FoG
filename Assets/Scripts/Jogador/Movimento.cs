@@ -7,22 +7,21 @@ using UnityEngine;
 
 public class Movimento : MonoBehaviour
 {
+    [SerializeField] private Rigidbody2D Corpo;
     [SerializeField] private float Velocidade;
     [SerializeField] private float VelocidadeNoAr;
     [SerializeField] private float MultiplicadorVelocidade;
-    [SerializeField] private Transform PeDoPersonagem;
-    [SerializeField] private LayerMask Chao;
     private float DirecaoMovimento;
-    private bool PertoDoChao;
     private bool IndoParaDireita;
-    
 
 
-    //O corpo do jogador
-    [SerializeField] private Rigidbody2D Corpo;
-    //Para ele não pular infinitamente
-    private bool PodePular = false;
+    [Header("Para Jump")]
+    [SerializeField] private LayerMask Chao;
+    [SerializeField] private Transform PeDoPersonagem;
     [SerializeField] private float ForcaPulo;
+    private bool PertoDoChao;
+    //private bool PodePular;
+    private bool PodePuloDuplo;
 
     [Header("Para Wall Slide")]
     [SerializeField] private LayerMask Parede;
@@ -41,6 +40,8 @@ public class Movimento : MonoBehaviour
 
     private void Start()
     {
+        //PodePular = false;
+        PodePuloDuplo = false;
         IndoParaDireita = true;
         AnguloWallJump.Normalize();
     }
@@ -63,9 +64,6 @@ public class Movimento : MonoBehaviour
         //Tambem passa um layer mask, pra que somente os layers associados a Chao sejam considerados
         PertoDoChao = Physics2D.BoxCast(PeDoPersonagem.position, new Vector2(0.5f, 0.2f), 0f, Vector2.down, 0.1f, Chao);
         TocandoParede = Physics2D.OverlapBox(WallCheck.position, new Vector2(.2f, .8f), 0, Parede);
-
-        
-
 
     }
 
@@ -107,6 +105,7 @@ public class Movimento : MonoBehaviour
         if (Wallsliding && Input.GetKeyDown(KeyCode.Space))
         {
             Corpo.AddForce(new Vector2(ForcaWallJump * DirecaoWallJulp * AnguloWallJump.x, ForcaWallJump * AnguloWallJump.y), ForceMode2D.Impulse);
+            PodePuloDuplo = true;
             
         }
     }
@@ -164,20 +163,23 @@ public class Movimento : MonoBehaviour
         //Se o acerto tem um resultado não nulo, pode pular
         if (PertoDoChao)
         {
-            PodePular = true;
+            PodePuloDuplo = false;
         }
-        else //Caso contrário, não se pode pular
-        {
-            PodePular = false;
-        }
+        
 
-        //Se a barra de espaço foi pressionada e o jogador pode pular
-        if (Input.GetKeyDown(KeyCode.Space) && PodePular)
+        //Pulo 
+        if (PertoDoChao && Input.GetKeyDown(KeyCode.Space) && !Wallsliding)
         {
-            //Adiciona uma força para cima proporcional à ForçaPulo
             Corpo.AddForce(Vector2.up * ForcaPulo);
-            //Proíbe o jogador de pular
-            PodePular = false;
+            PodePuloDuplo = true;
         }
+        else if (PodePuloDuplo && Input.GetKeyDown(KeyCode.Space) && !Wallsliding)
+        {
+            Corpo.AddForce(Vector2.up * ForcaPulo/2);
+            PodePuloDuplo = false;
+        }
+        
+
+        
     }
 }

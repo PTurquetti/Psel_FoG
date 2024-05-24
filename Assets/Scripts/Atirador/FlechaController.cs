@@ -18,11 +18,10 @@ public class FlechaController : MonoBehaviour
     //Ao colidir
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Verifica se colidiu com o jogador
-        if (collision.collider.tag == "Player")
+        
+        if(collision.collider.tag == "DestruidorDeFlecha")
         {
-            //Se sim, avisa o controlador do jogo que ele morreu
-            GameObject.FindGameObjectWithTag("Controlador").GetComponent<ControladorDoJogo>().Morreu();
+            Destroy(this.gameObject);
         }
     }
 

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Plataforma
   - Controlador
+  - DestruidorDeFlecha
+  - Flecha
+  - Lava
   layers:
   - Default
   - TransparentFX
@@ -15,7 +18,7 @@ TagManager:
   - UI
   - Chao
   - Parede
-  - 
+  - ParedeGrudenta
   - 
   - 
   - 
