@@ -8,10 +8,13 @@ using UnityEngine;
 public class Movimento : MonoBehaviour
 {
     [SerializeField] private float Velocidade;
+    [SerializeField] private float VelocidadeNoAr;
     [SerializeField] private float MultiplicadorVelocidade;
     [SerializeField] private Transform PeDoPersonagem;
     [SerializeField] private LayerMask Chao;
+    private float DirecaoMovimento;
     private bool PertoDoChao;
+    private bool IndoParaDireita;
     
 
 
@@ -21,28 +24,68 @@ public class Movimento : MonoBehaviour
     private bool PodePular = false;
     [SerializeField] private float ForcaPulo;
 
+    [Header("Para Wall Slide")]
     [SerializeField] private LayerMask Parede;
     [SerializeField] private Transform WallCheck;
     [SerializeField] private float VelocidadeWallSliding;
     private bool TocandoParede;
     private bool Wallsliding;
+
+    [Header("Para Wall Jump")]
+    [SerializeField] float ForcaWallJump;
+    [SerializeField] float DirecaoWallJulp = -1f;
+    [SerializeField] Vector2 AnguloWallJump;
     
 
 
 
+    private void Start()
+    {
+        IndoParaDireita = true;
+        AnguloWallJump.Normalize();
+    }
+
     void Update()
     {
+        StatusPlayer();
         Andar();
         Pular();
         WallSlide();
+        WallJump();
+    }
+
+    public void StatusPlayer()
+    {
+        DirecaoMovimento = Input.GetAxisRaw("Horizontal");
+
+        //Cria uma caixa, se a caixa colidir com o chao, pode pular
+        //Nessa função se passa a posição, tamanho, angulo e distancia(tamanho) em relação a direção
+        //Tambem passa um layer mask, pra que somente os layers associados a Chao sejam considerados
+        PertoDoChao = Physics2D.BoxCast(PeDoPersonagem.position, new Vector2(0.5f, 0.2f), 0f, Vector2.down, 0.1f, Chao);
+        TocandoParede = Physics2D.OverlapBox(WallCheck.position, new Vector2(.2f, .8f), 0, Parede);
+
         
+
+
+    }
+
+
+    public void Flip()
+    {
+        if (!Wallsliding)
+        {
+            IndoParaDireita = !IndoParaDireita;
+            DirecaoWallJulp *= -1;
+            transform.Rotate(0, 180, 0);
+        }
+
     }
 
     public void WallSlide()
     {
-        TocandoParede = Physics2D.OverlapBox(WallCheck.position, new Vector2(.2f, .8f), 0, Parede);
+        
 
-        if (TocandoParede && !PertoDoChao)
+        if (TocandoParede && !PertoDoChao && Corpo.velocity.y < 0)
         {
             Wallsliding = true;
         }
@@ -58,13 +101,23 @@ public class Movimento : MonoBehaviour
     
     }
 
+
+    public void WallJump()
+    {
+        if (Wallsliding && Input.GetKeyDown(KeyCode.Space))
+        {
+            Corpo.AddForce(new Vector2(ForcaWallJump * DirecaoWallJulp * AnguloWallJump.x, ForcaWallJump * AnguloWallJump.y), ForceMode2D.Impulse);
+            
+        }
+    }
+
     public void Andar()
     {
         //Define a velocidade do corpo baseada na tecla pressionada (Input.GetAxisRaw("Horizontal"))
         //A função retorna 1 se a seta pra direita ou D foram pressionados
         //Retorna -1 se a seta da esquerda ou A foram pressionados
         //Retorna 0 se nenhum direcional foi pressionado
-        float movimento_horizontal = Velocidade * Input.GetAxisRaw("Horizontal");
+        float movimento_horizontal = Velocidade * DirecaoMovimento;
 
         // Correr rapido com LShift
         if (Input.GetKey(KeyCode.LeftShift))
@@ -73,9 +126,33 @@ public class Movimento : MonoBehaviour
 
         }
 
+        if (movimento_horizontal > 0 && !IndoParaDireita)
+        {
+            Flip();
+        }
+        else if(movimento_horizontal < 0 && IndoParaDireita)
+        {
+            Flip();
+        }
+
         //Neste caso, não se usa Time.deltaTime, porque RigidBody2D.velocity já opera baseado na taxa de frames
-        Corpo.velocity = new Vector2(movimento_horizontal, Corpo.velocity.y);
+        if (PertoDoChao)
+        {
+            Corpo.velocity = new Vector2(movimento_horizontal, Corpo.velocity.y);
+
+        }else if (!PertoDoChao && !Wallsliding && DirecaoMovimento != 0)
+        {
+            Corpo.AddForce(new Vector2(VelocidadeNoAr * DirecaoMovimento, 0));
+            if (Mathf.Abs(Corpo.velocity.x) > Velocidade)
+            {
+                Corpo.velocity = new Vector2(movimento_horizontal, Corpo.velocity.y);
+            }
+        }
+
     }
+
+    
+
 
     public void Pular()
     {
