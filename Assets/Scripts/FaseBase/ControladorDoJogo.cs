@@ -10,7 +10,7 @@ public class ControladorDoJogo : MonoBehaviour
     public void Morreu()
     {
         //Para o tempo e ativa o Canvas
-        Time.timeScale = 0.0f;
+        //Time.timeScale = 0.0f;
         CanvasMorreu.gameObject.SetActive(true);
     }
 }

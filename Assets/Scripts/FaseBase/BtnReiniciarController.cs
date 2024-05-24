@@ -10,5 +10,6 @@ public class BtnReiniciarController : MonoBehaviour
         //Volta o tempo e recarrega a fase
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        
     }
 }

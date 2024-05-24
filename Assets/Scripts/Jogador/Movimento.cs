@@ -27,6 +27,7 @@ public class Movimento : MonoBehaviour
     [SerializeField] private LayerMask Parede;
     [SerializeField] private Transform WallCheck;
     [SerializeField] private float VelocidadeWallSliding;
+    [SerializeField] private float VelocidadeWallSlidingAcelerado;
     private bool TocandoParede;
     private bool Wallsliding;
 
@@ -94,7 +95,14 @@ public class Movimento : MonoBehaviour
 
         if (Wallsliding)
         {
-            Corpo.velocity = new Vector2(Corpo.velocity.x, Mathf.Clamp(Corpo.velocity.y, -VelocidadeWallSliding, float.MaxValue));
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
+                Corpo.velocity = new Vector2(Corpo.velocity.x, Mathf.Clamp(Corpo.velocity.y, -VelocidadeWallSlidingAcelerado, float.MaxValue));
+            }
+            else
+            {
+                Corpo.velocity = new Vector2(Corpo.velocity.x, Mathf.Clamp(Corpo.velocity.y, -VelocidadeWallSliding, float.MaxValue));
+            }
         }
     
     }
