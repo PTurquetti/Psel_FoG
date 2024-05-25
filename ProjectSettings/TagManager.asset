@@ -7,8 +7,9 @@ TagManager:
   - Plataforma
   - Controlador
   - DestruidorDeFlecha
-  - Flecha
   - Lava
+  - Inimigo
+  - Flecha
   layers:
   - Default
   - TransparentFX
