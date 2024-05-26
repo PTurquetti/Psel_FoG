@@ -84,7 +84,7 @@ public class Movimento : MonoBehaviour
     {
         
 
-        if (TocandoParede && !PertoDoChao && Corpo.velocity.y < 0)
+        if (TocandoParede && !PertoDoChao)
         {
             Wallsliding = true;
         }
