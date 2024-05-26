@@ -8,11 +8,11 @@ public class QuadradoSaltitante : MonoBehaviour
     [SerializeField] private Rigidbody2D Corpo;
     [SerializeField] private LayerMask Parede;
     [SerializeField] private Transform WallCheck;
-    [SerializeField] private float ForcaWallJump;
-    [SerializeField] private Vector2 AnguloWallJump;
+    [SerializeField] private float ForcaPulo;
+    [SerializeField] private Vector2 AnguloPulo;
+    [SerializeField] private float TempoEntreSaltos;
     private bool TocouParede;
-    private float DirecaoWallJump = 1;
-    private float TempoEntreSaltos = 2f;
+    private float DirecaoPulo = 1;
     private float Temporizador;
 
     void Start()
@@ -36,7 +36,7 @@ public class QuadradoSaltitante : MonoBehaviour
         if (TocouParede)
         {
             // Inverte a direção do salto
-            DirecaoWallJump = -DirecaoWallJump;
+            DirecaoPulo = -DirecaoPulo;
 
             // Gira o objeto em 180 graus em torno do eixo Y para virar visualmente
             Vector3 escala = transform.localScale;
@@ -45,16 +45,20 @@ public class QuadradoSaltitante : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        if (collision.collider.tag == "DestruidorDeFlecha")
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
     void Saltar()
     {
         // Aplica uma força na diagonal, modificada pela direção do salto
-        Corpo.AddForce(new Vector2(ForcaWallJump * DirecaoWallJump * AnguloWallJump.x, ForcaWallJump * AnguloWallJump.y), ForceMode2D.Impulse);
+        Corpo.AddForce(new Vector2(ForcaPulo * DirecaoPulo * AnguloPulo.x, ForcaPulo * AnguloPulo.y), ForceMode2D.Impulse);
     }
 
-    // Método para visualizar a área de detecção no editor
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(WallCheck.position, new Vector2(.5f, 1f));
-    }
+    
 }
