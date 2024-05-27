@@ -8,9 +8,7 @@ public class MovimentoPerseguidor : MonoBehaviour
     [SerializeField] private float Velocidade;
     private int DestinoPatrulha;
 
-    [SerializeField] private Transform Jogador;
-    [SerializeField] private  float DistanciaPerseguicao;
-    private bool Perseguindo;
+    
 
 
     
