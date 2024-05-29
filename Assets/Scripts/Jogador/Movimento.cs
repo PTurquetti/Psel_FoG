@@ -20,8 +20,7 @@ public class Movimento : MonoBehaviour
     [SerializeField] private Transform PeDoPersonagem;
     [SerializeField] private float ForcaPulo;
     private bool PertoDoChao;
-    //private bool PodePular;
-    private bool PodePuloDuplo;
+    
 
     [Header("Para Wall Slide")]
     [SerializeField] private LayerMask Parede;
@@ -41,8 +40,7 @@ public class Movimento : MonoBehaviour
 
     private void Start()
     {
-        //PodePular = false;
-        PodePuloDuplo = false;
+        
         IndoParaDireita = true;
         AnguloWallJump.Normalize();
     }
@@ -113,7 +111,6 @@ public class Movimento : MonoBehaviour
         if (Wallsliding && Input.GetKeyDown(KeyCode.Space))
         {
             Corpo.AddForce(new Vector2(ForcaWallJump * DirecaoWallJulp * AnguloWallJump.x, ForcaWallJump * AnguloWallJump.y), ForceMode2D.Impulse);
-            PodePuloDuplo = true;
             
         }
     }
@@ -164,30 +161,15 @@ public class Movimento : MonoBehaviour
     public void Pular()
     {
         //Cria uma caixa, se a caixa colidir com o chao, pode pular
-        //Nessa função se passa a posição, tamanho, angulo e distancia(tamanho) em relação a direção
-        //Tambem passa um layer mask, pra que somente os layers associados a Chao sejam considerados
         PertoDoChao = Physics2D.BoxCast(PeDoPersonagem.position, new Vector2(0.5f, 0.2f), 0f, Vector2.down, 0.1f, Chao);
 
-        //Se o acerto tem um resultado não nulo, pode pular
-        if (PertoDoChao)
-        {
-            PodePuloDuplo = false;
-        }
-        
 
         //Pulo 
         if (PertoDoChao && Input.GetKeyDown(KeyCode.Space) && !Wallsliding)
         {
             Corpo.AddForce(Vector2.up * ForcaPulo);
-            PodePuloDuplo = true;
+            
         }
-        else if (PodePuloDuplo && Input.GetKeyDown(KeyCode.Space) && !Wallsliding)
-        {
-            Corpo.AddForce(Vector2.up * ForcaPulo/2);
-            PodePuloDuplo = false;
-        }
-        
 
-        
     }
 }
