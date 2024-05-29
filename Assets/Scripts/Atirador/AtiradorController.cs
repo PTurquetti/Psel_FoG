@@ -15,12 +15,17 @@ public class AtiradorController : MonoBehaviour
     {
         //Salva o momento em que a cena foi carregada, o tempo = 0 da cena
         UltimoTiro = Time.time;
+        Atira();
     }
 
     void Update()
     {
-        //Se o tempo é maior que o tempo do último tiro + o intervalo
-        if(Time.time >= Intervalo + UltimoTiro)
+        Atira();
+    }
+
+    public void Atira()
+    {
+        if (Time.time >= Intervalo + UltimoTiro)
         {
             //Cria uma rotação
             Quaternion rotacao = new Quaternion();
